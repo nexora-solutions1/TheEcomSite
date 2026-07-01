@@ -17,13 +17,24 @@ export default function Hero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [activeVisual, setActiveVisual] = useState(0);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Slide visual auto-rotation every 6 seconds
+  // Slide visual auto-rotation every 6 seconds and mobile resize listener
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveVisual((prev) => (prev + 1) % 4);
     }, 6000);
-    return () => clearInterval(timer);
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleMouseMove = (e) => {
@@ -112,7 +123,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.95, x: -20 }}
             transition={{ duration: 0.4 }}
-            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: '30px 72px' }}
+            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: isMobile ? '24px 12px' : '30px 72px' }}
           >
             <div style={cardBaseStyle}>
               {renderBrowserHeader('portal.thecommerce.pk/verify')}
@@ -165,6 +176,7 @@ export default function Hero() {
               }}
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="hero-side-badge"
             >
               <div style={{ display: 'flex', gap: '4px' }}>
                 <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: 'rgba(241, 90, 36, 0.1)', color: 'var(--accent-orange)' }}>US LLC</span>
@@ -185,7 +197,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.95, x: -20 }}
             transition={{ duration: 0.4 }}
-            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: '24px 64px' }}
+            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: isMobile ? '24px 12px' : '24px 64px' }}
           >
             <div style={cardBaseStyle}>
               {renderBrowserHeader('stripe.com/dashboard/payouts')}
@@ -243,6 +255,7 @@ export default function Hero() {
               }}
               animate={{ y: [0, 4, 0] }}
               transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="hero-side-badge"
             >
               <div style={{
                 width: '20px',
@@ -271,7 +284,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.95, x: -20 }}
             transition={{ duration: 0.4 }}
-            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: '24px 64px' }}
+            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: isMobile ? '24px 12px' : '24px 64px' }}
           >
             <div style={cardBaseStyle}>
               {renderBrowserHeader('wise.com/business/balances')}
@@ -326,6 +339,7 @@ export default function Hero() {
               }}
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
+              className="hero-side-badge"
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', transform: 'translateZ(8px)' }}>
                 <span style={{ fontSize: '8px', fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.5px' }}>THECOMMERCEPK</span>
@@ -355,7 +369,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.95, x: -20 }}
             transition={{ duration: 0.4 }}
-            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: '24px 64px' }}
+            style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', padding: isMobile ? '24px 12px' : '24px 64px' }}
           >
             <div style={cardBaseStyle}>
               {renderBrowserHeader('portal.thecommerce.pk/compliance')}
@@ -408,6 +422,7 @@ export default function Hero() {
               }}
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+              className="hero-side-badge"
             >
               <div style={{
                 width: '20px',
@@ -784,7 +799,10 @@ export default function Hero() {
         }
         @media (max-width: 767px) {
           .hero-right-visual {
-            height: 460px !important;
+            height: 380px !important;
+          }
+          .hero-side-badge {
+            display: none !important;
           }
         }
         .radial-glow-back {
